@@ -103,9 +103,8 @@ def getProfessorInfo(prof_name):
     key = prof_name.lower()
     # Look up the legacy ID
     if key not in name_to_id:
-        return "Professor not found."
+        return "invalid"
     legacy_id = name_to_id[key]
     # Scrape the professor's page
     details = scrape_professor_page(legacy_id)
     return (json.dumps(details, indent=2))
-
