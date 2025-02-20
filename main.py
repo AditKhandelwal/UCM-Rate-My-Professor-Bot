@@ -15,6 +15,7 @@ def load_legacy_ids(json_file="legacyIds.json"):
             name_to_id[key] = legacy_id
     return name_to_id
 
+
 # -------------------------------------------
 # 2) SCRAPE PROFESSOR PAGE
 # -------------------------------------------
@@ -25,7 +26,7 @@ def scrape_professor_page(legacy_id):
     url = f"https://www.ratemyprofessors.com/professor/{legacy_id}"
     headers = {
         "User-Agent": "Mozilla/5.0"
-        # Possibly add a Cookie if you get "Unauthorized"
+        # Possibly add a Cookie if get "Unauthorized"
     }
     resp = requests.get(url, headers=headers)
     resp.raise_for_status()
@@ -96,36 +97,15 @@ def scrape_professor_page(legacy_id):
 # -------------------------------------------
 # 3) MAIN: QUERY BY NAME, PRINT RESULTS
 # -------------------------------------------
-def main():
-    # Load the local name->ID mappings
+def getProfessorInfo(prof_name):
     name_to_id = load_legacy_ids("legacyIds.json")
-
-    while True:
-        prof_name = input("\nEnter a professor's name (or 'quit' to exit): ").strip()
-        if prof_name.lower() == "quit":
-            break
-
-        # Make it so name is NOT case sensitive
-        key = prof_name.lower()
-
-        # Look up the legacy ID
-        if key not in name_to_id:
-            print("Professor not found in legacyIds.json.")
-            continue
-
-        legacy_id = name_to_id[key]
-        print(f"Found Legacy ID: {legacy_id}. Scraping page...")
-
-        # Scrape the professor's page
-        details = scrape_professor_page(legacy_id)
-
-        # Print as JSON
-        print("\n=== Professor Info ===")
-        print(json.dumps(details, indent=2))
-
-
-
-if __name__ == "__main__":
-    main()
-
+    # Make it so name is NOT case sensitive
+    key = prof_name.lower()
+    # Look up the legacy ID
+    if key not in name_to_id:
+        return "Professor not found."
+    legacy_id = name_to_id[key]
+    # Scrape the professor's page
+    details = scrape_professor_page(legacy_id)
+    return (json.dumps(details, indent=2))
 
